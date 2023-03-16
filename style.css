@@ -1,0 +1,29 @@
+.left-link {
+    float: left;
+}
+
+.right-link {
+    float: right;
+}
+
+body {
+    background-color: #feffb4;
+}
+
+.labels {
+    display: inline-block;
+    width: 150px;
+    text-align: left;
+}
+
+.output_block {
+    display: inline-block;
+    width: 500px;
+    text-align: left;
+}
+
+.input_bar {
+    display: inline-block;
+    width: 500px;
+    text-align: left;
+}

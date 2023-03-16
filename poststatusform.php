@@ -1,8 +1,13 @@
 <html>
+
+<head>
+    <title>Post status</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+</head>
 <style>
     .labels {
         display: inline-block;
-        width: 75px;
+        width: 100px;
         text-align: left;
     }
 
@@ -12,9 +17,9 @@
         text-align: left;
     }
 
-    .input_bar {
+    .statusCode_bar {
         display: inline-block;
-        width: 500px;
+        width: 50px;
         text-align: left;
     }
 
@@ -23,36 +28,72 @@
     }
 </style>
 
-<link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
-<head>
-    <title>My Website</title>
-    <style>
-        .center {
-            text-align: center;
-        }
-    </style>
-</head>
 <h1> Status Posting System </h1>
 
 <body>
-    <form action="poststatusprocess.php" method="post">
+    <form action="http://jgh4138.cmslamp14.aut.ac.nz/assign1/poststatusprocess.php" method="post">
+        <?php
+        include('sqlGetter.php');
+
+        function logic()
+        {
+            // DB SQL connection
+            require_once('../../conf/mysqlcredentials.inc.php');
+            $sqlConn = OpenSQLCon($dbhost, $dbuser, $dbpass, $db);
+
+            $sqlQuery = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$db' AND TABLE_NAME = '$dbtable';";
+            $sqlResult = mysqli_query($sqlConn, $sqlQuery);
+            // ------------------------------------------------
+
+            // If table exists... 
+            if ($sqlResult->num_rows != 0) {
+                // This logic is taking the last known status code and incrementing it by 1
+                $sqlQuery = "SELECT * FROM statusTable ORDER BY statusCode DESC LIMIT 1;";
+                $sqlResult = mysqli_query($sqlConn, $sqlQuery);
+                $sqlArray = mysqli_fetch_array($sqlResult);
+                $statusCode = $sqlArray['statusCode'];
+                $nextStatusCode = substr($statusCode, 1, 4) + 1;
+                $nextStatusCode = sprintf("%04d", $nextStatusCode);
+                // ------------------------------------------------
+        
+                echo '<p>';
+                echo '<label for="statuscode" class="labels">Status code:</label>';
+                echo '<input type="text" name="statuscode" maxlength="5" class="statusCode_bar" value="S' . $nextStatusCode . '" required /><br>';
+                echo '</p>';
+            } else {
+                echo '<p>';
+                echo '<label for="statuscode" class="labels">Status code:</label>';
+                echo '<input type="text" name="statuscode" maxlength="5" value="S0000" class="statusCode_bar" required /><br>';
+                echo '</p>';
+            }
+
+            $sqlConn->close();
+        }
+
+        try {
+            logic();
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        }
+        ?>
+
         <p>
-            <label for="statuscode" class="labels">Status code:</label> <input type='text' name='statuscode'
-                maxlength='5' class="input_bar" required /><br>
-        </p>
-        <p>
-            <label for="statuscode" class="labels">Status:</label> <input type='text' name='status' maxlength='140'
+            <label for="statuscode" class="labels">Status:</label> <input type="text" name="status" maxlength="140"
                 class="input_bar" required /><br>
         </p>
         <p>
             <label for="share" class="labels">Share:</label>
-            <input type='radio' name='share' value='public' /><label for="public" class="labels">Public</label>
+            <input type='radio' name='share' value='public' required /><label for="public" class="labels">Public</label>
             <input type='radio' name='share' value='friends' /><label for="friends" class="labels">Friends</label>
             <input type='radio' name='share' value='onlyme' /><label for="onlyme" class="labels">Only me</label>
         </p>
         <p>
-            <label for="date" class="labels">Date:</label> <input type='date' name='date' size='30' maxlength='140'
-                class="input_bar" required /><br>
+            <?php
+            $date = new DateTime();
+            echo '<label for="date" class="labels">Date:</label> ';
+            echo '<input type="date" value="' . $date->format("Y-m-d") . '" name="date" size="30" maxlength="140"
+                    class="input_bar" required /><br>';
+            ?>
         </p>
         <p>
             <label for="share" class="labels">Share:</label>
@@ -66,8 +107,8 @@
         </p>
 
     </form>
-    
-    <a href="/index.html">Return to Home Page</a>
+
+    <a href="http://jgh4138.cmslamp14.aut.ac.nz/assign1/index.html">Return to Home Page</a>
 </body>
 
 </html>

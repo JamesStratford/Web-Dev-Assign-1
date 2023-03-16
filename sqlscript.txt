@@ -1,0 +1,24 @@
+SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$db' AND TABLE_NAME = '$dbtable';
+
+CREATE TABLE statusTable (
+                        statusCode VARCHAR(50) unique,
+                        status VARCHAR(50),
+                        share VARCHAR(50),
+                        date VARCHAR(50),
+                        allowLike BOOLEAN,
+                        allowComments BOOLEAN,
+                        allowShare BOOLEAN
+                    );
+
+SELECT statusCode FROM $dbtable WHERE statusCode = '$statusCode';
+
+INSERT INTO $dbtable (statusCode, status, date, share, allowLike, allowComments, allowShare) 
+    VALUES ('$statusCode', '$status', '$date', '$share', '$allowLike', '$allowComments', '$allowShare');
+
+SELECT * FROM $dbtable
+    WHERE status LIKE '%$searchQuery%'
+    ORDER BY status ASC;
+
+DROP TABLE $dbtable;
+
+SELECT * FROM $dbtable ORDER BY statusCode DESC LIMIT 1;

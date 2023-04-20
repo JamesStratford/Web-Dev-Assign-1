@@ -21,11 +21,8 @@
         // DB SQL connection
         require_once('../../conf/mysqlcredentials.inc.php');
         $sqlConn = OpenSQLCon($dbhost, $dbuser, $dbpass, $db);
-        $sqlQuery = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$db' AND TABLE_NAME = '$dbtable';";
-        $sqlResult = mysqli_query($sqlConn, $sqlQuery);
-        // ------------------------------------------------
 
-        if ($sqlResult->num_rows == 0) {
+        if (!checkForTable($sqlConn, $db, $dbtable)) {
             throw new Exception("No status found. Please go to the post status page to post one.<br>" . 
             "<p><a href='http://jgh4138.cmslamp14.aut.ac.nz/assign1/poststatusform.php'>Post status</a></p>");
         }

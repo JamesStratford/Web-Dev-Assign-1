@@ -41,12 +41,8 @@
             require_once('../../conf/mysqlcredentials.inc.php');
             $sqlConn = OpenSQLCon($dbhost, $dbuser, $dbpass, $db);
 
-            $sqlQuery = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$db' AND TABLE_NAME = '$dbtable';";
-            $sqlResult = mysqli_query($sqlConn, $sqlQuery);
-            // ------------------------------------------------
-
             // If table exists... 
-            if ($sqlResult->num_rows != 0) {
+            if (checkForTable($sqlConn, $db, $dbtable)) {
                 // This logic is taking the last known status code and incrementing it by 1
                 $sqlQuery = "SELECT * FROM statusTable ORDER BY statusCode DESC LIMIT 1;";
                 $sqlResult = mysqli_query($sqlConn, $sqlQuery);

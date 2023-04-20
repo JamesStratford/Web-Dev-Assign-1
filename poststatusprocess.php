@@ -20,19 +20,18 @@
             $sqlQuery = "SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$db' AND TABLE_NAME = '$dbtable';";
             $sqlResult = mysqli_query($sqlConn, $sqlQuery);
 
-            if ($sqlResult->num_rows == 0) {
+            if (!checkForTable($sqlConn, $db, $dbtable)) {
                 $sqlQuery = "CREATE TABLE statusTable (
-                            statusCode VARCHAR(50) unique,
-                            status VARCHAR(50),
-                            share VARCHAR(50),
-                            date VARCHAR(50),
-                            allowLike BOOLEAN,
-                            allowComments BOOLEAN,
-                            allowShare BOOLEAN
-                        );";
+                    statusCode VARCHAR(50) unique,
+                    status VARCHAR(50),
+                    share VARCHAR(50),
+                    date VARCHAR(50),
+                    allowLike BOOLEAN,
+                    allowComments BOOLEAN,
+                    allowShare BOOLEAN
+                );";
                 $sqlResult = mysqli_query($sqlConn, $sqlQuery);
             }
-
 
             $statusCode = $_POST['statuscode'];
             $status = $_POST['status'];
